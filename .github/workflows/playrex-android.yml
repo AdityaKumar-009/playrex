@@ -72,6 +72,9 @@ jobs:
           chmod +x gradlew
           ./gradlew :androidApp:assembleFullDebug --no-daemon --stacktrace
 
+      - name: Audit compiled APK for known advertising SDKs
+        run: python3 tools/playrex/audit_apk.py androidApp/build/outputs/apk/full/debug/*.apk
+
       - name: Upload Playrex APK
         if: success()
         uses: actions/upload-artifact@v4
