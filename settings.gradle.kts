@@ -1,4 +1,4 @@
-rootProject.name = "Playrex"
+rootProject.name = "Nuvio"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
