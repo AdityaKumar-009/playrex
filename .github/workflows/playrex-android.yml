@@ -32,6 +32,7 @@ jobs:
           rsync -a \
             --exclude='.git' \
             --exclude='.github/workflows/' \
+            --exclude='README.md' \
             --exclude='tools/playrex/' \
             --exclude='MPVKit/' \
             --exclude='vendor/' \
@@ -57,6 +58,9 @@ jobs:
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
+
+      - name: Create optional local properties file for Gradle
+        run: touch local.properties
 
       - name: Build native Android debug APK
         run: |
