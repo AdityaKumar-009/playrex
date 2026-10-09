@@ -1,6 +1,6 @@
 # Playrex — Native Android media client
 
-**Status (9 Oct 2026):** A native Android fork of the full [Nuvio Mobile 0.5.8-beta](https://github.com/NuvioMedia/NuvioMobile/releases/tag/0.5.8-beta) Kotlin/Compose frontend, committed in this repo. A CI debug build is configured. The **RzFlix-specific backend is not yet integrated** because its undocumented server contract and permitted access have not been verified.
+**Status (9 Oct 2026):** A native Android fork of the full [Nuvio Mobile 0.5.8-beta](https://github.com/NuvioMedia/NuvioMobile/releases/tag/0.5.8-beta) Kotlin/Compose frontend. A Kotlin RzFlix-compatible JSON provider adapter and offline tests have been added, but the **live RzFlix backend is not yet connected** because the original API contract, working server endpoints and permitted access have not been verified.
 
 ## What's included
 
@@ -8,6 +8,7 @@
 - `com.playrex.app` Android application ID, `com.playrex.app.debug` for debug, and the **Playrex** Android launcher label.
 - Source audit guarding against importing RzFlix's **TradPlus, Unity Ads, Vungle and MBridge** advertising SDKs. No RzFlix APK or Flutter binaries are copied into the Android project.
 - [RzFlix APK analysis and unverified-backend boundaries](docs/rzflix-analysis.md).
+- [Native RzFlix JSON adapter, typed media models, HTTPS validation and outstanding verification](docs/rzflix-native-bridge.md).
 
 ## Build / APK
 
