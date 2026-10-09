@@ -1,55 +1,26 @@
-<div align="center">
+# Playrex — Native Android media client
 
-  <img src="https://nuvio.tv/assets/nuvio-app-logo-wordmark.webp" alt="Nuvio" width="320" />
+**Status (9 Oct 2026):** A native Android fork of the full [Nuvio Mobile 0.5.8-beta](https://github.com/NuvioMedia/NuvioMobile/releases/tag/0.5.8-beta) Kotlin/Compose frontend, committed in this repo. A CI debug build is configured. The **RzFlix-specific backend is not yet integrated** because its undocumented server contract and permitted access have not been verified.
 
-  <p>
-    A free, open-source media app for your phone, your desktop, and the TV you already own.
-    <br />
-    Bring your own sources. Nuvio turns them into a library with artwork, ratings, subtitles, and your place saved on every screen.
-  </p>
+## What's included
 
-  [Website](https://nuvio.tv) · [GitHub releases](https://github.com/NuvioMedia/NuvioMobile/releases/latest) · [Support Nuvio](https://nuvio.tv/support)
+- Nuvio 0.5.8-beta UI screens, navigation, catalog, search, title details, playback, settings, and its user-configured Stremio-compatible add-on support.
+- `com.playrex.app` Android application ID, `com.playrex.app.debug` for debug, and the **Playrex** Android launcher label.
+- Source audit guarding against importing RzFlix's **TradPlus, Unity Ads, Vungle and MBridge** advertising SDKs. No RzFlix APK or Flutter binaries are copied into the Android project.
+- [RzFlix APK analysis and unverified-backend boundaries](docs/rzflix-analysis.md).
 
-</div>
+## Build / APK
 
-## Get Nuvio Mobile
+Go to [GitHub Actions](https://github.com/AdityaKumar-009/playrex/actions/workflows/playrex-android.yml) and inspect the latest run. A **successful** build publishes a `playrex-android-full-debug` artifact containing a debug APK. This is not a signed Play Store release.
 
-- [Android on Google Play](https://play.google.com/store/apps/details?id=com.nuvio.app)
-- [Android APK](https://github.com/NuvioMedia/NuvioMobile/releases/latest)
-- iOS via AltStore or SideStore: add [this source URL](https://raw.githubusercontent.com/NuvioMedia/NuvioMobile/cmp-rewrite/store.json) in the app's Sources section, then install Nuvio.
-
-## Build from source
-
-```bash
-git clone https://github.com/NuvioMedia/NuvioMobile.git
-cd NuvioMobile
-```
-
-### Android
-
-Android development requires Android Studio and the Android SDK.
+To compile locally with Android Studio/Android SDK and Java 17:
 
 ```bash
 ./gradlew :androidApp:assembleFullDebug
 ```
 
-### iOS
+The project originates from the **exact Nuvio 0.5.8-beta tag**, with its original Compose layouts retained. Do not assume the app can serve RzFlix catalogs or streams: candidate RzFlix server URLs embedded in the APK were not accessible for confirming their API contracts. A documented, authorized API and redacted response fixtures are required before implementing that provider in the existing Nuvio catalog/stream repository interfaces.
 
-iOS development requires macOS and Xcode.
+## Credits, legal and privacy
 
-```bash
-env NUVIO_IOS_DISTRIBUTION=full xcodebuild \
-  -project iosApp/iosApp.xcodeproj \
-  -scheme iosApp \
-  -configuration Debug \
-  -sdk iphonesimulator \
-  -derivedDataPath build/ios-derived-full-simulator \
-  CODE_SIGNING_ALLOWED=NO \
-  build
-```
-
-The shared app is built with Kotlin Multiplatform and Compose Multiplatform.
-
-## License
-
-[GNU General Public License v3.0](./LICENSE)
+The source is a modified derivative of [NuvioMedia/NuvioMobile](https://github.com/NuvioMedia/NuvioMobile), licensed under **GNU GPL v3.0**; the original `LICENSE` and relevant notices remain. This repo distributes source so downstream users can inspect and modify it. Nuvio's own optional network integrations still exist; removing RzFlix ad SDKs does not guarantee that every externally supplied media page is free of ads. Playback should use sources you are authorized to access.
