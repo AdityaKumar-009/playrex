@@ -1,0 +1,72 @@
+name: Playrex native Android build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: playrex-native-android-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  import-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out Playrex
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Import exact Nuvio 0.5.8-beta source on first run
+        if: ${{ hashFiles('androidApp/build.gradle.kts') == '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch 0.5.8-beta https://github.com/NuvioMedia/NuvioMobile.git "${RUNNER_TEMP}/nuvio-base"
+          # Retain the Playrex CI/scripts, and avoid copying original Git objects/submodule metadata.
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.github/workflows/' \
+            --exclude='tools/playrex/' \
+            --exclude='MPVKit/' \
+            --exclude='vendor/' \
+            "${RUNNER_TEMP}/nuvio-base/" ./
+          python3 tools/playrex/apply_fork.py
+          python3 tools/playrex/audit_source.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          # Upstream's .gitignore excludes scripts/; preserve build helpers anyway.
+          git add -f scripts
+          git commit -m 'Import Nuvio 0.5.8-beta GPL-3.0 sources for Playrex'
+          git push origin HEAD:main
+
+      - name: Check for included ad SDKs
+        run: python3 tools/playrex/audit_source.py
+
+      - name: Configure Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build native Android debug APK
+        run: |
+          chmod +x gradlew
+          ./gradlew :androidApp:assembleFullDebug --no-daemon --stacktrace
+
+      - name: Upload Playrex APK
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playrex-android-full-debug
+          path: androidApp/build/outputs/apk/full/debug/*.apk
+          if-no-files-found: error
