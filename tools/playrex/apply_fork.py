@@ -36,9 +36,8 @@ def main() -> None:
     replace_exact("composeApp/src/androidMain/res/values/strings.xml",
                   '<string name="app_name">Nuvio</string>',
                   '<string name="app_name">Playrex</string>')
-    replace_exact("settings.gradle.kts",
-                  'rootProject.name = "Nuvio"',
-                  'rootProject.name = "Playrex"')
+    # Keep upstream Gradle rootProject.name = "Nuvio". Compose generated-resource
+    # package names are derived from it and referenced throughout the UI.
     print("Playrex application ID/label updated. Original Nuvio UI retained.")
 
 
