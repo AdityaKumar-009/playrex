@@ -40,10 +40,7 @@ class RzFlixNativeBackend(
             if (root["resources"] is JsonArray && root["id"] is JsonPrimitive) {
                 return RzFlixConfiguration.StremioManifest(url)
             }
-            val candidate = root.text("apiBaseUrl", "base_url", "api_url", "endpoint", "api", "url")
-                ?: (root["data"] as? JsonObject)?.text(
-                    "apiBaseUrl", "base_url", "api_url", "endpoint", "api", "url"
-                )
+            val candidate = RzFlixPayloadMapper.endpointCandidate(root)
             if (candidate != null) {
                 return runCatching {
                     RzFlixConfiguration.Endpoint(requireHttpsUrl(candidate))
@@ -100,6 +97,12 @@ internal object RzFlixPayloadMapper {
     private val json = Json { ignoreUnknownKeys = true }
 
     fun parse(raw: String): JsonElement = json.parseToJsonElement(raw)
+
+    fun endpointCandidate(root: JsonObject): String? =
+        root.text("apiBaseUrl", "base_url", "api_url", "endpoint", "api", "url")
+            ?: (root["data"] as? JsonObject)?.text(
+                "apiBaseUrl", "base_url", "api_url", "endpoint", "api", "url"
+            )
 
     fun catalog(raw: String): List<MetaPreview> =
         records(parse(raw), "metas", "results", "items", "movies", "shows", "content")
