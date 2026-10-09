@@ -1,13 +1,55 @@
-# Playrex — native Android media client
+<div align="center">
 
-Playrex is an Android fork of [Nuvio Mobile 0.5.8-beta](https://github.com/NuvioMedia/NuvioMobile/releases/tag/0.5.8-beta) retaining Nuvio's Kotlin Multiplatform/Compose UI and native playback.
+  <img src="https://nuvio.tv/assets/nuvio-app-logo-wordmark.webp" alt="Nuvio" width="320" />
 
-**Project status:** Nuvio UI + original user-configured add-on capabilities; **not yet connected to RzFlix's backend**. Static inspection of the uploaded RzFlix APK found candidate URLs but no verified public API contract, access permissions or JSON response schema. Neither RzFlix's Flutter binary nor its advertising SDKs are incorporated.
+  <p>
+    A free, open-source media app for your phone, your desktop, and the TV you already own.
+    <br />
+    Bring your own sources. Nuvio turns them into a library with artwork, ratings, subtitles, and your place saved on every screen.
+  </p>
 
-The first run of [Playrex Android workflow](.github/workflows/playrex-android.yml) imports the upstream GPLv3 Nuvio 0.5.8-beta source into this repository, applies the minimal Playrex application ID and launcher-name changes, audits for known ad SDKs, and attempts a native Android debug build.
+  [Website](https://nuvio.tv) · [GitHub releases](https://github.com/NuvioMedia/NuvioMobile/releases/latest) · [Support Nuvio](https://nuvio.tv/support)
 
-After import, build with `./gradlew :androidApp:assembleFullDebug` (Android SDK + Java 17 required). Find any successful APK under Actions run artifacts.
+</div>
 
-RzFlix static analysis and integration boundaries: [docs/rzflix-analysis.md](docs/rzflix-analysis.md).
+## Get Nuvio Mobile
 
-**License:** Nuvio source is GNU GPL v3.0. This fork preserves the Nuvio source and notices, and must continue to make corresponding GPLv3 source available. RzFlix proprietary binaries are not distributed. Do not assume an undocumented streaming API is approved for third-party use.
+- [Android on Google Play](https://play.google.com/store/apps/details?id=com.nuvio.app)
+- [Android APK](https://github.com/NuvioMedia/NuvioMobile/releases/latest)
+- iOS via AltStore or SideStore: add [this source URL](https://raw.githubusercontent.com/NuvioMedia/NuvioMobile/cmp-rewrite/store.json) in the app's Sources section, then install Nuvio.
+
+## Build from source
+
+```bash
+git clone https://github.com/NuvioMedia/NuvioMobile.git
+cd NuvioMobile
+```
+
+### Android
+
+Android development requires Android Studio and the Android SDK.
+
+```bash
+./gradlew :androidApp:assembleFullDebug
+```
+
+### iOS
+
+iOS development requires macOS and Xcode.
+
+```bash
+env NUVIO_IOS_DISTRIBUTION=full xcodebuild \
+  -project iosApp/iosApp.xcodeproj \
+  -scheme iosApp \
+  -configuration Debug \
+  -sdk iphonesimulator \
+  -derivedDataPath build/ios-derived-full-simulator \
+  CODE_SIGNING_ALLOWED=NO \
+  build
+```
+
+The shared app is built with Kotlin Multiplatform and Compose Multiplatform.
+
+## License
+
+[GNU General Public License v3.0](./LICENSE)
