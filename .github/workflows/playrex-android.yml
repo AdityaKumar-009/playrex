@@ -62,6 +62,11 @@ jobs:
       - name: Create optional local properties file for Gradle
         run: touch local.properties
 
+      - name: Test Playrex native RzFlix payload adapter
+        run: |
+          chmod +x gradlew
+          ./gradlew :composeApp:testAndroidHostTest --tests 'com.nuvio.app.features.rzflix.RzFlixNativeBackendTest' --no-daemon
+
       - name: Build native Android debug APK
         run: |
           chmod +x gradlew
